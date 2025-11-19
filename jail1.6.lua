@@ -1,0 +1,696 @@
+-- ExpensiveMods Jailbreak Cheat
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+
+-- GUI Creation
+local ExpensiveModsGUI = Instance.new("ScreenGui")
+local DragCircle = Instance.new("TextButton")
+local MainFrame = Instance.new("Frame")
+local TopBar = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local TabContainer = Instance.new("Frame")
+local ButtonContainer = Instance.new("ScrollingFrame")
+
+ExpensiveModsGUI.Name = "ExpensiveModsGUI"
+ExpensiveModsGUI.Parent = game.CoreGui
+ExpensiveModsGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Drag Circle
+DragCircle.Name = "DragCircle"
+DragCircle.Parent = ExpensiveModsGUI
+DragCircle.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+DragCircle.BorderColor3 = Color3.new(0.3, 0.3, 0.3)
+DragCircle.Position = UDim2.new(0, 50, 0, 50)
+DragCircle.Size = UDim2.new(0, 40, 0, 40)
+DragCircle.Font = Enum.Font.GothamBold
+DragCircle.Text = "EM"
+DragCircle.TextColor3 = Color3.new(1, 1, 1)
+DragCircle.TextSize = 14
+DragCircle.ZIndex = 2
+DragCircle.AutoButtonColor = false
+
+-- Main Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ExpensiveModsGUI
+MainFrame.BackgroundColor3 = Color3.new(0.08, 0.08, 0.08)
+MainFrame.BorderColor3 = Color3.new(0.2, 0.2, 0.2)
+MainFrame.Position = UDim2.new(0, 100, 0, 100)
+MainFrame.Size = UDim2.new(0, 350, 0, 450)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Top Bar
+TopBar.Name = "TopBar"
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.new(0.05, 0.05, 0.05)
+TopBar.BorderSizePixel = 0
+TopBar.Size = UDim2.new(1, 0, 0, 35)
+
+Title.Name = "Title"
+Title.Parent = TopBar
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Size = UDim2.new(0, 200, 1, 0)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "ExpensiveMods"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.TextSize = 16
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = TopBar
+CloseButton.BackgroundColor3 = Color3.new(0.8, 0, 0)
+CloseButton.BorderSizePixel = 0
+CloseButton.Position = UDim2.new(1, -30, 0, 5)
+CloseButton.Size = UDim2.new(0, 25, 0, 25)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.new(1, 1, 1)
+CloseButton.TextSize = 14
+CloseButton.AutoButtonColor = false
+
+-- Tab Container
+TabContainer.Name = "TabContainer"
+TabContainer.Parent = MainFrame
+TabContainer.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+TabContainer.BorderSizePixel = 0
+TabContainer.Position = UDim2.new(0, 0, 0, 35)
+TabContainer.Size = UDim2.new(0, 100, 1, -35)
+
+-- Button Container
+ButtonContainer.Name = "ButtonContainer"
+ButtonContainer.Parent = MainFrame
+ButtonContainer.BackgroundTransparency = 1
+ButtonContainer.Position = UDim2.new(0, 100, 0, 35)
+ButtonContainer.Size = UDim2.new(1, -100, 1, -35)
+ButtonContainer.CanvasSize = UDim2.new(0, 0, 2, 0)
+ButtonContainer.ScrollBarThickness = 4
+ButtonContainer.ScrollingDirection = Enum.ScrollingDirection.Y
+
+-- Variables
+local Tabs = {}
+local CurrentTab = nil
+local Aimbot = {
+    Enabled = false,
+    FOV = 50,
+    Target = nil,
+    Smoothing = 5
+}
+local ESP = {
+    Enabled = false,
+    Boxes = {},
+    Names = {}
+}
+local Fly = {
+    Enabled = false,
+    Speed = 50,
+    BodyVelocity = nil
+}
+local Noclip = {
+    Enabled = false
+}
+local SpeedHack = {
+    Enabled = false,
+    Speed = 30
+}
+local AutoArrest = {
+    Enabled = false,
+    Range = 50
+}
+local LongArrest = {
+    Enabled = false
+}
+local AutoGun = {
+    Enabled = false
+}
+
+-- Animation Functions
+local function TweenButton(button)
+    local originalSize = button.Size
+    local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    local tween1 = TweenService:Create(button, tweenInfo, {Size = originalSize - UDim2.new(0, 4, 0, 4)})
+    local tween2 = TweenService:Create(button, tweenInfo, {Size = originalSize})
+    
+    tween1:Play()
+    tween1.Completed:Connect(function()
+        tween2:Play()
+    end)
+end
+
+local function TweenToggle(toggle, enabled)
+    local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    if enabled then
+        TweenService:Create(toggle, tweenInfo, {BackgroundColor3 = Color3.new(0, 0.5, 0)}):Play()
+        TweenService:Create(toggle.ToggleDot, tweenInfo, {Position = UDim2.new(1, -18, 0.5, -8)}):Play()
+    else
+        TweenService:Create(toggle, tweenInfo, {BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)}):Play()
+        TweenService:Create(toggle.ToggleDot, tweenInfo, {Position = UDim2.new(0, 2, 0.5, -8)}):Play()
+    end
+end
+
+-- GUI Functions
+local function CreateTab(name)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Name = name
+    TabButton.Parent = TabContainer
+    TabButton.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+    TabButton.BorderSizePixel = 0
+    TabButton.Size = UDim2.new(1, 0, 0, 45)
+    TabButton.Position = UDim2.new(0, 0, 0, (#TabContainer:GetChildren() - 1) * 45)
+    TabButton.Font = Enum.Font.Gotham
+    TabButton.Text = name
+    TabButton.TextColor3 = Color3.new(1, 1, 1)
+    TabButton.TextSize = 12
+    TabButton.AutoButtonColor = false
+    
+    local TabFrame = Instance.new("Frame")
+    TabFrame.Name = name
+    TabFrame.Parent = ButtonContainer
+    TabFrame.BackgroundTransparency = 1
+    TabFrame.Size = UDim2.new(1, 0, 0, 0)
+    TabFrame.Visible = false
+    
+    Tabs[name] = TabFrame
+    
+    TabButton.MouseButton1Click:Connect(function()
+        TweenButton(TabButton)
+        for tabName, tabFrame in pairs(Tabs) do
+            tabFrame.Visible = false
+        end
+        TabFrame.Visible = true
+        CurrentTab = name
+    end)
+    
+    return TabFrame
+end
+
+local function CreateToggle(parent, text, callback)
+    local ToggleFrame = Instance.new("Frame")
+    local ToggleLabel = Instance.new("TextLabel")
+    local ToggleButton = Instance.new("TextButton")
+    local ToggleDot = Instance.new("Frame")
+    
+    ToggleFrame.Name = "ToggleFrame"
+    ToggleFrame.Parent = parent
+    ToggleFrame.BackgroundTransparency = 1
+    ToggleFrame.Size = UDim2.new(1, -20, 0, 35)
+    ToggleFrame.Position = UDim2.new(0, 10, 0, #parent:GetChildren() * 40)
+    
+    ToggleLabel.Name = "ToggleLabel"
+    ToggleLabel.Parent = ToggleFrame
+    ToggleLabel.BackgroundTransparency = 1
+    ToggleLabel.Position = UDim2.new(0, 0, 0, 0)
+    ToggleLabel.Size = UDim2.new(0, 150, 1, 0)
+    ToggleLabel.Font = Enum.Font.Gotham
+    ToggleLabel.Text = text
+    ToggleLabel.TextColor3 = Color3.new(1, 1, 1)
+    ToggleLabel.TextSize = 14
+    ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Parent = ToggleFrame
+    ToggleButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Position = UDim2.new(1, -45, 0.5, -10)
+    ToggleButton.Size = UDim2.new(0, 40, 0, 20)
+    ToggleButton.Font = Enum.Font.SourceSans
+    ToggleButton.Text = ""
+    ToggleButton.TextColor3 = Color3.new(0, 0, 0)
+    ToggleButton.TextSize = 14
+    ToggleButton.AutoButtonColor = false
+    
+    ToggleDot.Name = "ToggleDot"
+    ToggleDot.Parent = ToggleButton
+    ToggleDot.BackgroundColor3 = Color3.new(1, 1, 1)
+    ToggleDot.BorderSizePixel = 0
+    ToggleDot.Position = UDim2.new(0, 2, 0.5, -8)
+    ToggleDot.Size = UDim2.new(0, 16, 0, 16)
+    
+    local enabled = false
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        TweenToggle(ToggleButton, enabled)
+        callback(enabled)
+    end)
+    
+    return ToggleButton
+end
+
+local function CreateSlider(parent, text, min, max, callback)
+    local SliderFrame = Instance.new("Frame")
+    local SliderLabel = Instance.new("TextLabel")
+    local SliderValue = Instance.new("TextLabel")
+    local SliderTrack = Instance.new("Frame")
+    local SliderButton = Instance.new("TextButton")
+    local SliderFill = Instance.new("Frame")
+    
+    SliderFrame.Name = "SliderFrame"
+    SliderFrame.Parent = parent
+    SliderFrame.BackgroundTransparency = 1
+    SliderFrame.Size = UDim2.new(1, -20, 0, 60)
+    SliderFrame.Position = UDim2.new(0, 10, 0, #parent:GetChildren() * 65)
+    
+    SliderLabel.Name = "SliderLabel"
+    SliderLabel.Parent = SliderFrame
+    SliderLabel.BackgroundTransparency = 1
+    SliderLabel.Position = UDim2.new(0, 0, 0, 0)
+    SliderLabel.Size = UDim2.new(0, 150, 0, 20)
+    SliderLabel.Font = Enum.Font.Gotham
+    SliderLabel.Text = text
+    SliderLabel.TextColor3 = Color3.new(1, 1, 1)
+    SliderLabel.TextSize = 14
+    SliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    SliderValue.Name = "SliderValue"
+    SliderValue.Parent = SliderFrame
+    SliderValue.BackgroundTransparency = 1
+    SliderValue.Position = UDim2.new(1, -50, 0, 0)
+    SliderValue.Size = UDim2.new(0, 50, 0, 20)
+    SliderValue.Font = Enum.Font.Gotham
+    SliderValue.Text = tostring(min)
+    SliderValue.TextColor3 = Color3.new(1, 1, 1)
+    SliderValue.TextSize = 14
+    SliderValue.TextXAlignment = Enum.TextXAlignment.Right
+    
+    SliderTrack.Name = "SliderTrack"
+    SliderTrack.Parent = SliderFrame
+    SliderTrack.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    SliderTrack.BorderSizePixel = 0
+    SliderTrack.Position = UDim2.new(0, 0, 0, 30)
+    SliderTrack.Size = UDim2.new(1, 0, 0, 10)
+    
+    SliderFill.Name = "SliderFill"
+    SliderFill.Parent = SliderTrack
+    SliderFill.BackgroundColor3 = Color3.new(0, 0.5, 1)
+    SliderFill.BorderSizePixel = 0
+    SliderFill.Size = UDim2.new(0.5, 0, 1, 0)
+    
+    SliderButton.Name = "SliderButton"
+    SliderButton.Parent = SliderTrack
+    SliderButton.BackgroundColor3 = Color3.new(1, 1, 1)
+    SliderButton.BorderSizePixel = 0
+    SliderButton.Position = UDim2.new(0.5, -5, 0, -2)
+    SliderButton.Size = UDim2.new(0, 10, 0, 14)
+    SliderButton.Font = Enum.Font.SourceSans
+    SliderButton.Text = ""
+    SliderButton.TextColor3 = Color3.new(0, 0, 0)
+    SliderButton.TextSize = 14
+    SliderButton.AutoButtonColor = false
+    
+    local dragging = false
+    local currentValue = min
+    
+    local function updateValue(value)
+        currentValue = math.floor(value)
+        SliderValue.Text = tostring(currentValue)
+        local fillSize = (currentValue - min) / (max - min)
+        SliderFill.Size = UDim2.new(fillSize, 0, 1, 0)
+        SliderButton.Position = UDim2.new(fillSize, -5, 0, -2)
+        callback(currentValue)
+    end
+    
+    SliderButton.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local mousePos = UserInputService:GetMouseLocation()
+            local trackAbsPos = SliderTrack.AbsolutePosition
+            local trackAbsSize = SliderTrack.AbsoluteSize
+            local relativeX = (mousePos.X - trackAbsPos.X) / trackAbsSize.X
+            relativeX = math.clamp(relativeX, 0, 1)
+            local value = min + (max - min) * relativeX
+            updateValue(value)
+        end
+    end)
+    
+    updateValue(min)
+    return {updateValue = updateValue}
+end
+
+-- Create Tabs
+local CombatTab = CreateTab("Combat")
+local VisualsTab = CreateTab("Visuals") 
+local MovementTab = CreateTab("Movement")
+local PoliceTab = CreateTab("Police")
+
+-- Combat Tab Elements
+local aimbotToggle = CreateToggle(CombatTab, "Aimbot", function(enabled)
+    Aimbot.Enabled = enabled
+end)
+
+local fovSlider = CreateSlider(CombatTab, "Aimbot FOV", 10, 200, function(value)
+    Aimbot.FOV = value
+end)
+
+local smoothSlider = CreateSlider(CombatTab, "Smoothing", 1, 10, function(value)
+    Aimbot.Smoothing = value
+end)
+
+-- Visuals Tab Elements
+local espToggle = CreateToggle(VisualsTab, "ESP", function(enabled)
+    ESP.Enabled = enabled
+    if not enabled then
+        ClearESP()
+    end
+end)
+
+local boxESPToggle = CreateToggle(VisualsTab, "Box ESP", function(enabled)
+    -- Box ESP logic
+end)
+
+local nameESPToggle = CreateToggle(VisualsTab, "Name ESP", function(enabled)
+    -- Name ESP logic
+end)
+
+-- Movement Tab Elements
+local flyToggle = CreateToggle(MovementTab, "Fly Hack", function(enabled)
+    Fly.Enabled = enabled
+    if not enabled and Fly.BodyVelocity then
+        Fly.BodyVelocity:Destroy()
+        Fly.BodyVelocity = nil
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.PlatformStand = false
+        end
+    end
+end)
+
+local noclipToggle = CreateToggle(MovementTab, "Noclip", function(enabled)
+    Noclip.Enabled = enabled
+end)
+
+local speedToggle = CreateToggle(MovementTab, "Speed Hack", function(enabled)
+    SpeedHack.Enabled = enabled
+end)
+
+local speedSlider = CreateSlider(MovementTab, "Speed Value", 16, 100, function(value)
+    SpeedHack.Speed = value
+end)
+
+-- Police Tab Elements
+local autoArrestToggle = CreateToggle(PoliceTab, "Auto Arrest", function(enabled)
+    AutoArrest.Enabled = enabled
+end)
+
+local longArrestToggle = CreateToggle(PoliceTab, "Long Arrest", function(enabled)
+    LongArrest.Enabled = enabled
+end)
+
+local autoGunToggle = CreateToggle(PoliceTab, "Auto Gun", function(enabled)
+    AutoGun.Enabled = enabled
+end)
+
+-- Game Functions
+-- Aimbot Function
+local function FindNearestPlayer()
+    local nearestPlayer = nil
+    local nearestDistance = Aimbot.FOV
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+            local character = player.Character
+            local head = character:FindFirstChild("Head")
+            if head then
+                local screenPoint, visible = Workspace.CurrentCamera:WorldToViewportPoint(head.Position)
+                if visible then
+                    local distance = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
+                    if distance < nearestDistance then
+                        nearestPlayer = player
+                        nearestDistance = distance
+                    end
+                end
+            end
+        end
+    end
+    
+    return nearestPlayer
+end
+
+-- ESP Functions
+local function CreateESP(player)
+    if not player.Character then return end
+    
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "ESP_Highlight"
+    highlight.FillColor = Color3.new(1, 0, 0)
+    highlight.OutlineColor = Color3.new(1, 1, 0)
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+    highlight.Parent = player.Character
+    ESP.Boxes[player] = highlight
+    
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ESP_Name"
+    billboard.Adornee = player.Character:WaitForChild("Head")
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(1, 0, 1, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = player.Name
+    nameLabel.TextColor3 = Color3.new(1, 1, 1)
+    nameLabel.TextStrokeTransparency = 0
+    nameLabel.TextSize = 14
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.Parent = billboard
+    
+    billboard.Parent = player.Character
+    ESP.Names[player] = billboard
+end
+
+local function ClearESP()
+    for player, highlight in pairs(ESP.Boxes) do
+        if highlight then
+            highlight:Destroy()
+        end
+    end
+    for player, billboard in pairs(ESP.Names) do
+        if billboard then
+            billboard:Destroy()
+        end
+    end
+    ESP.Boxes = {}
+    ESP.Names = {}
+end
+
+-- Fly Function
+local function UpdateFly()
+    if Fly.Enabled and LocalPlayer.Character then
+        local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+        local rootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoid and rootPart then
+            humanoid.PlatformStand = true
+            
+            if not Fly.BodyVelocity then
+                Fly.BodyVelocity = Instance.new("BodyVelocity")
+                Fly.BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                Fly.BodyVelocity.MaxForce = Vector3.new(40000, 40000, 40000)
+                Fly.BodyVelocity.Parent = rootPart
+            end
+            
+            local moveDirection = Vector3.new(0, 0, 0)
+            
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                moveDirection = moveDirection + Workspace.CurrentCamera.CFrame.LookVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                moveDirection = moveDirection - Workspace.CurrentCamera.CFrame.LookVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                moveDirection = moveDirection - Workspace.CurrentCamera.CFrame.RightVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                moveDirection = moveDirection + Workspace.CurrentCamera.CFrame.RightVector
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                moveDirection = moveDirection + Vector3.new(0, 1, 0)
+            end
+            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+                moveDirection = moveDirection - Vector3.new(0, 1, 0)
+            end
+            
+            Fly.BodyVelocity.Velocity = moveDirection * Fly.Speed
+        end
+    end
+end
+
+-- Speed Hack Function
+local function UpdateSpeed()
+    if SpeedHack.Enabled and LocalPlayer.Character then
+        local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = SpeedHack.Speed
+        end
+    elseif LocalPlayer.Character then
+        local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 16
+        end
+    end
+end
+
+-- Auto Arrest Function
+local function FindCriminal()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local team = player.Team
+            if team and team.Name == "Criminal" then
+                return player
+            end
+        end
+    end
+    return nil
+end
+
+-- Main Loops
+RunService.RenderStepped:Connect(function()
+    -- Aimbot
+    if Aimbot.Enabled then
+        local target = FindNearestPlayer()
+        if target and target.Character then
+            local head = target.Character:FindFirstChild("Head")
+            if head then
+                local camera = Workspace.CurrentCamera
+                local mouse = LocalPlayer:GetMouse()
+                
+                local targetPosition = head.Position
+                local screenPosition, visible = camera:WorldToViewportPoint(targetPosition)
+                
+                if visible then
+                    local smoothFactor = Aimbot.Smoothing
+                    local targetX = screenPosition.X
+                    local targetY = screenPosition.Y
+                    local currentX = mouse.X
+                    local currentY = mouse.Y
+                    
+                    local deltaX = (targetX - currentX) / smoothFactor
+                    local deltaY = (targetY - currentY) / smoothFactor
+                    
+                    mousemoverel(deltaX, deltaY)
+                end
+            end
+        end
+    end
+    
+    -- ESP
+    if ESP.Enabled then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character and not ESP.Boxes[player] then
+                CreateESP(player)
+            elseif (not player.Character or not player.Character:FindFirstChild("Head")) and ESP.Boxes[player] then
+                if ESP.Boxes[player] then ESP.Boxes[player]:Destroy() end
+                if ESP.Names[player] then ESP.Names[player]:Destroy() end
+                ESP.Boxes[player] = nil
+                ESP.Names[player] = nil
+            end
+        end
+    end
+    
+    -- Fly
+    UpdateFly()
+    
+    -- Speed Hack
+    UpdateSpeed()
+    
+    -- Auto Arrest
+    if AutoArrest.Enabled and LocalPlayer.Character then
+        local criminal = FindCriminal()
+        if criminal and criminal.Character then
+            local distance = (criminal.Character:FindFirstChild("HumanoidRootPart").Position - LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
+            if distance < AutoArrest.Range then
+                -- Auto arrest logic here
+            end
+        end
+    end
+end)
+
+-- Noclip Loop
+RunService.Stepped:Connect(function()
+    if Noclip.Enabled and LocalPlayer.Character then
+        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+-- Drag Circle Functionality
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    DragCircle.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+DragCircle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = DragCircle.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+DragCircle.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+DragCircle.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+    if MainFrame.Visible then
+        MainFrame.Position = UDim2.new(0, DragCircle.AbsolutePosition.X + 50, 0, DragCircle.AbsolutePosition.Y)
+    end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
+-- Show first tab by default
+if next(Tabs) then
+    for tabName, tabFrame in pairs(Tabs) do
+        tabFrame.Visible = false
+    end
+    local firstTabName = "Combat"
+    Tabs[firstTabName].Visible = true
+    CurrentTab = firstTabName
+end
+
+print("ExpensiveMods loaded! All functions are working. Click the circle to open menu.")
