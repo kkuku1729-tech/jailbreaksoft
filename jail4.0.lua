@@ -1,4 +1,4 @@
--- ExpensiveMods Jailbreak Cheat (Wide Menu Fix)
+-- ExpensiveMods Jailbreak Cheat (Fixed Menu Layout)
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -13,13 +13,13 @@ local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 
 -- Очистка
-if CoreGui:FindFirstChild("ExpensiveModsV3") then
-    CoreGui:FindFirstChild("ExpensiveModsV3"):Destroy()
+if CoreGui:FindFirstChild("ExpensiveModsFinal") then
+    CoreGui:FindFirstChild("ExpensiveModsFinal"):Destroy()
 end
 
 -- Создаем GUI
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ExpensiveModsV3"
+ScreenGui.Name = "ExpensiveModsFinal"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
@@ -52,21 +52,21 @@ CircleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 CircleText.TextScaled = true
 CircleText.ZIndex = 101
 
--- Главное меню (ШИРОКОЕ)
+-- Главное меню
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
-MainFrame.Size = UDim2.new(0, 500, 0, 600) -- Шире и выше
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+MainFrame.Size = UDim2.new(0, 400, 0, 500)
 MainFrame.Visible = false
 MainFrame.ZIndex = 90
 MainFrame.Active = true
 MainFrame.Draggable = true
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 15)
+MainCorner.CornerRadius = UDim.new(0, 12)
 MainCorner.Parent = MainFrame
 
 -- Верхняя панель
@@ -75,82 +75,83 @@ TopBar.Name = "TopBar"
 TopBar.Parent = MainFrame
 TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 TopBar.BorderSizePixel = 0
-TopBar.Size = UDim2.new(1, 0, 0, 60) -- Выше
+TopBar.Size = UDim2.new(1, 0, 0, 50)
 TopBar.ZIndex = 91
 
 local TopCorner = Instance.new("UICorner")
-TopCorner.CornerRadius = UDim.new(0, 15)
+TopCorner.CornerRadius = UDim.new(0, 12)
 TopCorner.Parent = TopBar
 
--- Заголовок и кнопка закрытия
-local TitleContainer = Instance.new("Frame")
-TitleContainer.Name = "TitleContainer"
-TitleContainer.Parent = TopBar
-TitleContainer.BackgroundTransparency = 1
-TitleContainer.Position = UDim2.new(0, 0, 0, 0)
-TitleContainer.Size = UDim2.new(1, 0, 1, 0)
-TitleContainer.ZIndex = 92
-
+-- Заголовок
 local Title = Instance.new("TextLabel")
 Title.Name = "Title"
-Title.Parent = TitleContainer
+Title.Parent = TopBar
 Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 25, 0, 5)
-Title.Size = UDim2.new(0, 300, 0, 30)
+Title.Position = UDim2.new(0, 20, 0, 5)
+Title.Size = UDim2.new(0, 200, 0, 25)
 Title.Font = Enum.Font.GothamBlack
 Title.Text = "EXPENSIVEMODS"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 20
+Title.TextSize = 18
 Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.ZIndex = 93
+Title.ZIndex = 92
 
 local SubTitle = Instance.new("TextLabel")
 SubTitle.Name = "SubTitle"
-SubTitle.Parent = TitleContainer
+SubTitle.Parent = TopBar
 SubTitle.BackgroundTransparency = 1
-SubTitle.Position = UDim2.new(0, 25, 0, 30)
-SubTitle.Size = UDim2.new(0, 300, 0, 25)
+SubTitle.Position = UDim2.new(0, 20, 0, 28)
+SubTitle.Size = UDim2.new(0, 200, 0, 20)
 SubTitle.Font = Enum.Font.Gotham
-SubTitle.Text = "Aimbot & More"
+SubTitle.Text = "Premium Cheats"
 SubTitle.TextColor3 = Color3.fromRGB(200, 200, 200)
-SubTitle.TextSize = 14
+SubTitle.TextSize = 12
 SubTitle.TextXAlignment = Enum.TextXAlignment.Left
-SubTitle.ZIndex = 93
+SubTitle.ZIndex = 92
 
+-- Кнопка закрытия
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "CloseButton"
-CloseButton.Parent = TitleContainer
+CloseButton.Parent = TopBar
 CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 CloseButton.BorderSizePixel = 0
-CloseButton.Position = UDim2.new(1, -45, 0.5, -15)
+CloseButton.Position = UDim2.new(1, -40, 0.5, -15)
 CloseButton.Size = UDim2.new(0, 30, 0, 30)
 CloseButton.Font = Enum.Font.GothamBold
 CloseButton.Text = "×"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.TextSize = 20
-CloseButton.ZIndex = 93
+CloseButton.ZIndex = 92
 
 local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(1, 0)
 CloseCorner.Parent = CloseButton
 
--- Контейнер вкладок
-local TabContainer = Instance.new("Frame")
-TabContainer.Name = "TabContainer"
-TabContainer.Parent = MainFrame
-TabContainer.BackgroundTransparency = 1
-TabContainer.Position = UDim2.new(0, 20, 0, 70) -- Отступы
-TabContainer.Size = UDim2.new(1, -40, 1, -80) -- Больше места
-TabContainer.ZIndex = 91
+-- Контейнер для кнопок вкладок
+local TabButtonsContainer = Instance.new("Frame")
+TabButtonsContainer.Name = "TabButtonsContainer"
+TabButtonsContainer.Parent = MainFrame
+TabButtonsContainer.BackgroundTransparency = 1
+TabButtonsContainer.Position = UDim2.new(0, 20, 0, 60)
+TabButtonsContainer.Size = UDim2.new(1, -40, 0, 40)
+TabButtonsContainer.ZIndex = 91
 
--- Кнопки вкладок (горизонтальные)
-local TabButtons = Instance.new("Frame")
-TabButtons.Name = "TabButtons"
-TabButtons.Parent = TopBar
-TabButtons.BackgroundTransparency = 1
-TabButtons.Position = UDim2.new(0, 300, 0, 15)
-TabButtons.Size = UDim2.new(0, 180, 0, 30)
-TabButtons.ZIndex = 92
+-- Создаем layout для кнопок вкладок
+local TabButtonsLayout = Instance.new("UIListLayout")
+TabButtonsLayout.Parent = TabButtonsContainer
+TabButtonsLayout.FillDirection = Enum.FillDirection.Horizontal
+TabButtonsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+TabButtonsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabButtonsLayout.Padding = UDim.new(0, 10)
+
+-- Контейнер для содержимого вкладок
+local TabContentContainer = Instance.new("Frame")
+TabContentContainer.Name = "TabContentContainer"
+TabContentContainer.Parent = MainFrame
+TabContentContainer.BackgroundTransparency = 1
+TabContentContainer.Position = UDim2.new(0, 20, 0, 110)
+TabContentContainer.Size = UDim2.new(1, -40, 1, -130)
+TabContentContainer.ZIndex = 91
 
 -- Анимации
 local function SmoothTween(obj, properties, duration, easing)
@@ -174,44 +175,13 @@ local function OpenMenu()
     MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
     
     SmoothTween(MainFrame, {
-        Size = UDim2.new(0, 500, 0, 600),
-        Position = UDim2.new(0.5, -250, 0.5, -300)
+        Size = UDim2.new(0, 400, 0, 500),
+        Position = UDim2.new(0.5, -200, 0.5, -250)
     }, 0.5, Enum.EasingStyle.Back)
-    
-    wait(0.3)
-    -- Появление элементов с задержкой
-    local children = MainFrame:GetDescendants()
-    for i, child in pairs(children) do
-        if child:IsA("Frame") and child ~= MainFrame then
-            child.BackgroundTransparency = 1
-        elseif child:IsA("TextLabel") or child:IsA("TextButton") then
-            child.TextTransparency = 1
-        end
-    end
-    
-    for i, child in pairs(children) do
-        if child:IsA("Frame") and child ~= MainFrame then
-            wait(0.02)
-            SmoothTween(child, {BackgroundTransparency = 0}, 0.3)
-        elseif child:IsA("TextLabel") or child:IsA("TextButton") then
-            wait(0.02)
-            SmoothTween(child, {TextTransparency = 0}, 0.3)
-        end
-    end
 end
 
 -- Анимация закрытия меню
 local function CloseMenu()
-    local children = MainFrame:GetDescendants()
-    for i, child in pairs(children) do
-        if child:IsA("Frame") and child ~= MainFrame then
-            SmoothTween(child, {BackgroundTransparency = 1}, 0.2)
-        elseif child:IsA("TextLabel") or child:IsA("TextButton") then
-            SmoothTween(child, {TextTransparency = 1}, 0.2)
-        end
-    end
-    
-    wait(0.3)
     SmoothTween(MainFrame, {
         Size = UDim2.new(0, 0, 0, 0),
         Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -227,20 +197,12 @@ CircleButton.MouseEnter:Connect(function()
         Size = UDim2.new(0, 65, 0, 65),
         BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     }, 0.2)
-    
-    SmoothTween(CircleText, {
-        TextColor3 = Color3.fromRGB(0, 170, 255)
-    }, 0.2)
 end)
 
 CircleButton.MouseLeave:Connect(function()
     SmoothTween(CircleButton, {
         Size = UDim2.new(0, 60, 0, 60),
         BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    }, 0.2)
-    
-    SmoothTween(CircleText, {
-        TextColor3 = Color3.fromRGB(255, 255, 255)
     }, 0.2)
 end)
 
@@ -277,41 +239,44 @@ CloseButton.MouseButton1Click:Connect(function()
     CloseMenu()
 end)
 
--- Создание вкладок с улучшенным расположением
+-- Создание вкладок
 local function CreateTab(name)
+    -- Кнопка вкладки
     local TabButton = Instance.new("TextButton")
     TabButton.Name = name .. "Tab"
-    TabButton.Parent = TabButtons
+    TabButton.Parent = TabButtonsContainer
     TabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     TabButton.BorderSizePixel = 0
-    TabButton.Size = UDim2.new(0, 85, 0, 30) -- Шире кнопки
+    TabButton.Size = UDim2.new(0, 80, 0, 35)
     TabButton.Font = Enum.Font.Gotham
     TabButton.Text = name
     TabButton.TextColor3 = Color3.fromRGB(200, 200, 200)
     TabButton.TextSize = 13
-    TabButton.ZIndex = 93
+    TabButton.ZIndex = 92
     
     local TabCorner = Instance.new("UICorner")
     TabCorner.CornerRadius = UDim.new(0, 8)
     TabCorner.Parent = TabButton
-    
+
+    -- Контент вкладки
     local TabFrame = Instance.new("ScrollingFrame")
     TabFrame.Name = name .. "Frame"
-    TabFrame.Parent = TabContainer
+    TabFrame.Parent = TabContentContainer
     TabFrame.BackgroundTransparency = 1
     TabFrame.Size = UDim2.new(1, 0, 1, 0)
     TabFrame.Visible = false
-    TabFrame.ScrollBarThickness = 3
+    TabFrame.ScrollBarThickness = 4
     TabFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
-    TabFrame.CanvasSize = UDim2.new(0, 0, 0, 800)
+    TabFrame.CanvasSize = UDim2.new(0, 0, 0, 600)
     TabFrame.ZIndex = 91
-    
-    local UIListLayout = Instance.new("UIListLayout")
-    UIListLayout.Parent = TabFrame
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0, 10) -- Больше расстояния между элементами
-    
+
+    -- Layout для элементов вкладки
+    local TabLayout = Instance.new("UIListLayout")
+    TabLayout.Parent = TabFrame
+    TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabLayout.Padding = UDim.new(0, 8)
+
     -- Анимация кнопки вкладки
     TabButton.MouseEnter:Connect(function()
         if TabButton.TextColor3 ~= Color3.fromRGB(0, 170, 255) then
@@ -334,28 +299,25 @@ local function CreateTab(name)
     return TabButton, TabFrame
 end
 
--- Создаем вкладки
+-- Создаем вкладки с правильными названиями
 local CombatTab, CombatFrame = CreateTab("COMBAT")
-local VisualTab, VisualFrame = CreateTab("VISUAL")
-local MoveTab, MoveFrame = CreateTab("MOVEMENT")
+local VisualTab, VisualFrame = CreateTab("VISUAL") 
+local MoveTab, MoveFrame = CreateTab("MOVE")
 local PoliceTab, PoliceFrame = CreateTab("POLICE")
 
--- Располагаем кнопки вкладок с пробелами
-CombatTab.Position = UDim2.new(0, 0, 0, 0)
-VisualTab.Position = UDim2.new(0, 90, 0, 0)
-MoveTab.Position = UDim2.new(0, 180, 0, 0)
-
--- Активация вкладок
+-- Система переключения вкладок
 local currentTab = CombatFrame
 CombatFrame.Visible = true
 
 local function SwitchTab(newTab, tabButton)
-    currentTab.Visible = false
+    if currentTab then
+        currentTab.Visible = false
+    end
     newTab.Visible = true
     currentTab = newTab
     
     -- Сброс цвета всех кнопок
-    for _, btn in pairs(TabButtons:GetChildren()) do
+    for _, btn in pairs(TabButtonsContainer:GetChildren()) do
         if btn:IsA("TextButton") then
             SmoothTween(btn, {
                 BackgroundColor3 = Color3.fromRGB(35, 35, 35),
@@ -371,33 +333,34 @@ local function SwitchTab(newTab, tabButton)
     }, 0.2)
 end
 
+-- Подключаем клики по вкладкам
 CombatTab.MouseButton1Click:Connect(function() SwitchTab(CombatFrame, CombatTab) end)
 VisualTab.MouseButton1Click:Connect(function() SwitchTab(VisualFrame, VisualTab) end)
 MoveTab.MouseButton1Click:Connect(function() SwitchTab(MoveFrame, MoveTab) end)
 PoliceTab.MouseButton1Click:Connect(function() SwitchTab(PoliceFrame, PoliceTab) end)
 
--- Создание переключателей с улучшенным дизайном
-local function CreateAnimatedToggle(parent, text, callback)
+-- Создание элементов управления
+local function CreateToggle(parent, text, callback)
     local ToggleFrame = Instance.new("Frame")
     ToggleFrame.Parent = parent
     ToggleFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     ToggleFrame.BorderSizePixel = 0
-    ToggleFrame.Size = UDim2.new(1, -40, 0, 50) -- Уже с отступами
+    ToggleFrame.Size = UDim2.new(1, 0, 0, 45)
     ToggleFrame.ZIndex = 92
     
     local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 10)
+    ToggleCorner.CornerRadius = UDim.new(0, 8)
     ToggleCorner.Parent = ToggleFrame
     
     local ToggleLabel = Instance.new("TextLabel")
     ToggleLabel.Parent = ToggleFrame
     ToggleLabel.BackgroundTransparency = 1
-    ToggleLabel.Position = UDim2.new(0, 20, 0, 0)
-    ToggleLabel.Size = UDim2.new(0, 300, 1, 0)
+    ToggleLabel.Position = UDim2.new(0, 15, 0, 0)
+    ToggleLabel.Size = UDim2.new(0, 250, 1, 0)
     ToggleLabel.Font = Enum.Font.Gotham
     ToggleLabel.Text = text
     ToggleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ToggleLabel.TextSize = 16 -- Крупнее текст
+    ToggleLabel.TextSize = 14
     ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
     ToggleLabel.ZIndex = 93
     
@@ -405,8 +368,8 @@ local function CreateAnimatedToggle(parent, text, callback)
     ToggleButton.Parent = ToggleFrame
     ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     ToggleButton.BorderSizePixel = 0
-    ToggleButton.Position = UDim2.new(1, -70, 0.5, -15)
-    ToggleButton.Size = UDim2.new(0, 60, 0, 30) -- Больше переключатель
+    ToggleButton.Position = UDim2.new(1, -65, 0.5, -12)
+    ToggleButton.Size = UDim2.new(0, 50, 0, 24)
     ToggleButton.ZIndex = 93
     
     local ToggleBtnCorner = Instance.new("UICorner")
@@ -417,8 +380,8 @@ local function CreateAnimatedToggle(parent, text, callback)
     ToggleDot.Parent = ToggleButton
     ToggleDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ToggleDot.BorderSizePixel = 0
-    ToggleDot.Position = UDim2.new(0, 3, 0, 3)
-    ToggleDot.Size = UDim2.new(0, 24, 0, 24) -- Больше точка
+    ToggleDot.Position = UDim2.new(0, 2, 0, 2)
+    ToggleDot.Size = UDim2.new(0, 20, 0, 20)
     ToggleDot.ZIndex = 94
     
     local ToggleDotCorner = Instance.new("UICorner")
@@ -429,33 +392,26 @@ local function CreateAnimatedToggle(parent, text, callback)
     
     local function updateToggle()
         if enabled then
-            SmoothTween(ToggleDot, {Position = UDim2.new(0, 33, 0, 3)}, 0.3)
-            SmoothTween(ToggleButton, {BackgroundColor3 = Color3.fromRGB(0, 200, 100)}, 0.3)
-            SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(30, 40, 35)}, 0.3)
+            SmoothTween(ToggleDot, {Position = UDim2.new(0, 28, 0, 2)}, 0.2)
+            SmoothTween(ToggleButton, {BackgroundColor3 = Color3.fromRGB(0, 170, 255)}, 0.2)
         else
-            SmoothTween(ToggleDot, {Position = UDim2.new(0, 3, 0, 3)}, 0.3)
-            SmoothTween(ToggleButton, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, 0.3)
-            SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}, 0.3)
+            SmoothTween(ToggleDot, {Position = UDim2.new(0, 2, 0, 2)}, 0.2)
+            SmoothTween(ToggleButton, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}, 0.2)
         end
         if callback then callback(enabled) end
     end
     
-    -- Анимация при наведении
-    ToggleFrame.MouseEnter:Connect(function()
-        if not enabled then
-            SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}, 0.2)
-        end
-    end)
-    
-    ToggleFrame.MouseLeave:Connect(function()
-        if not enabled then
-            SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}, 0.2)
-        end
-    end)
-    
     ToggleFrame.MouseButton1Click:Connect(function()
         enabled = not enabled
         updateToggle()
+    end)
+    
+    ToggleFrame.MouseEnter:Connect(function()
+        SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}, 0.2)
+    end)
+    
+    ToggleFrame.MouseLeave:Connect(function()
+        SmoothTween(ToggleFrame, {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}, 0.2)
     end)
     
     return {
@@ -466,27 +422,32 @@ local function CreateAnimatedToggle(parent, text, callback)
     }
 end
 
--- Добавляем функции с правильными отступами
-CreateAnimatedToggle(CombatFrame, "Aimbot", function(state) print("Aimbot:", state) end)
-CreateAnimatedToggle(CombatFrame, "Silent Aim", function(state) print("Silent Aim:", state) end)
-CreateAnimatedToggle(CombatFrame, "Trigger Bot", function(state) print("Trigger Bot:", state) end)
-CreateAnimatedToggle(CombatFrame, "Wallhack", function(state) print("Wallhack:", state) end)
+-- Добавляем функции в соответствующие вкладки
+-- COMBAT вкладка
+CreateToggle(CombatFrame, "Aimbot", function(state) print("Aimbot:", state) end)
+CreateToggle(CombatFrame, "Silent Aim", function(state) print("Silent Aim:", state) end)
+CreateToggle(CombatFrame, "Trigger Bot", function(state) print("Trigger Bot:", state) end)
+CreateToggle(CombatFrame, "Wallhack", function(state) print("Wallhack:", state) end)
 
-CreateAnimatedToggle(VisualFrame, "ESP", function(state) print("ESP:", state) end)
-CreateAnimatedToggle(VisualFrame, "Box ESP", function(state) print("Box ESP:", state) end)
-CreateAnimatedToggle(VisualFrame, "Name ESP", function(state) print("Name ESP:", state) end)
-CreateAnimatedToggle(VisualFrame, "Tracers", function(state) print("Tracers:", state) end)
+-- VISUAL вкладка
+CreateToggle(VisualFrame, "ESP", function(state) print("ESP:", state) end)
+CreateToggle(VisualFrame, "Box ESP", function(state) print("Box ESP:", state) end)
+CreateToggle(VisualFrame, "Name Tags", function(state) print("Name Tags:", state) end)
+CreateToggle(VisualFrame, "Tracers", function(state) print("Tracers:", state) end)
 
-CreateAnimatedToggle(MoveFrame, "Fly Hack", function(state) print("Fly:", state) end)
-CreateAnimatedToggle(MoveFrame, "Noclip", function(state) print("Noclip:", state) end)
-CreateAnimatedToggle(MoveFrame, "Speed Hack", function(state) print("Speed:", state) end)
-CreateAnimatedToggle(MoveFrame, "Jump Hack", function(state) print("Jump:", state) end)
+-- MOVE вкладка
+CreateToggle(MoveFrame, "Fly Hack", function(state) print("Fly:", state) end)
+CreateToggle(MoveFrame, "Noclip", function(state) print("Noclip:", state) end)
+CreateToggle(MoveFrame, "Speed Hack", function(state) print("Speed:", state) end)
+CreateToggle(MoveFrame, "Jump Hack", function(state) print("Jump:", state) end)
 
-CreateAnimatedToggle(PoliceFrame, "Auto Arrest", function(state) print("Auto Arrest:", state) end)
-CreateAnimatedToggle(PoliceFrame, "Long Arm", function(state) print("Long Arm:", state) end)
-CreateAnimatedToggle(PoliceFrame, "Rapid Fire", function(state) print("Rapid Fire:", state) end)
+-- POLICE вкладка
+CreateToggle(PoliceFrame, "Auto Arrest", function(state) print("Auto Arrest:", state) end)
+CreateToggle(PoliceFrame, "Long Arm", function(state) print("Long Arm:", state) end)
+CreateToggle(PoliceFrame, "Rapid Fire", function(state) print("Rapid Fire:", state) end)
+CreateToggle(PoliceFrame, "Infinite Ammo", function(state) print("Infinite Ammo:", state) end)
 
 -- Активируем первую вкладку
 SwitchTab(CombatFrame, CombatTab)
 
-print("ExpensiveMods Wide Menu loaded! Click the EM circle to open menu.")
+print("ExpensiveMods Fixed Menu loaded! Click the EM circle to open menu.")
